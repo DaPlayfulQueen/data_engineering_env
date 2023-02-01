@@ -2,18 +2,19 @@ version: '3.13'
 
 services:
   cassandra:
+    container_name: cassandra
     image: cassandra:latest
     ports:
       - "9042:9042"
     networks:
-      notebooks:
+      default:
         aliases:
           - cassandra
     volumes:
       - cassandra:/var/lib/cassandra
 
   postgres:
-    container_name: postgres_container
+    container_name: postgres
     image: postgres:latest
     ports:
       - "5432:5432"
@@ -21,7 +22,7 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: admin
     networks:
-      notebooks:
+      default:
         aliases:
           - postgres
     expose:
@@ -31,32 +32,29 @@ services:
       - postgres:/var/lib/postgresql/data
 
   pgadmin:
+    container_name: pgadmin
     image: dpage/pgadmin4:6.18
     ports:
       - "5050:80"
     environment:
       PGADMIN_DEFAULT_EMAIL: daplayful@gmail.com
       PGADMIN_DEFAULT_PASSWORD: admin
-    networks:
-      notebooks:
-        aliases:
-          - pgadmin
     links:
       - postgres:postgres
 
   jupyter:
+    container_name: jupyter
     build:
       context: ./jupyter
       dockerfile: Dockerfile
     ports:
       - "8888:8888"
-    networks:
-      notebooks:
+    environment:
+      - CHOWN_HOME=yes
+      - CHOWN_HOME_OPTS='-R'.
+      - GRANT_SUDO=yes
     volumes:
       - ./notebooks:/home/jovyan/work
-
-networks:
-  notebooks:
 
 volumes:
   postgres:
