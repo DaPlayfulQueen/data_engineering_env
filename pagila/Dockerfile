@@ -1,0 +1,3 @@
+FROM postgres:latest
+ARG PAGILA_REPOSITORY
+COPY ${PAGILA_REPOSITORY}/*.sql .

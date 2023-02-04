@@ -16,20 +16,36 @@ services:
   postgres:
     container_name: postgres
     image: postgres:latest
-    ports:
-      - "5432:5432"
+    expose:
+      - 5432
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     networks:
       default:
         aliases:
           - postgres
-    expose:
-      - 5432
-
     volumes:
       - postgres:/var/lib/postgresql/data
+
+  pagila:
+    container_name: pagila
+    build:
+      context: ./pagila
+      dockerfile: Dockerfile
+      args:
+        PAGILA_REPOSITORY: ${PAGILA_REPOSITORY}
+    expose:
+      - 5432
+    environment:
+      POSTGRES_USER: ${PAGILA_USER}
+      POSTGRES_PASSWORD: ${PAGILA_PASSWORD}
+    networks:
+      default:
+        aliases:
+          - pagila
+    volumes:
+      - pagila:/var/lib/postgresql/data
 
   pgadmin:
     container_name: pgadmin
@@ -60,3 +76,4 @@ volumes:
   postgres:
   cassandra:
   pgadmin:
+  pagila:

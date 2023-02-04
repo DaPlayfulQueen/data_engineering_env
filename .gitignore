@@ -1,3 +1,5 @@
 .idea/*
 .idea
 notebooks/*
+.env
+pagila/data/*
