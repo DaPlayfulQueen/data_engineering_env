@@ -1,6 +1,7 @@
 cassandra-driver==3.25.0
-boto3==1.26.57
+boto3==1.26.64
 ipython-sql==0.4.1
-ipykernel==6.20.2
+ipykernel==6.21.1
 jupyter==1.0.0
 psycopg2-binary
+SQLAlchemy==1.4.46
