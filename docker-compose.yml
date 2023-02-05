@@ -32,10 +32,9 @@ services:
       context: ./pagila
       dockerfile: Dockerfile
       args:
-        PAGILA_REPOSITORY: ${PAGILA_REPOSITORY}
-        PAGILA_DB_NAME: ${PAGILA_DB_NAME}
-        PAGILA_USER: ${PAGILA_USER}
+        PAGILA_DATA: ${PAGILA_DATA}
     environment:
+      PAGILA_DB_NAME: ${PAGILA_DB_NAME}
       POSTGRES_USER: ${PAGILA_USER}
       POSTGRES_PASSWORD: ${PAGILA_PASSWORD}
     networks:
@@ -53,8 +52,6 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: daplayful@gmail.com
       PGADMIN_DEFAULT_PASSWORD: admin
-    links:
-      - postgres:postgres
 
   jupyter:
     container_name: jupyter
