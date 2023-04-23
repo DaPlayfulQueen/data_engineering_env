@@ -12,6 +12,8 @@ services:
           - cassandra
     volumes:
       - cassandra:/var/lib/cassandra
+    profiles:
+      - cassandra
 
   postgres:
     container_name: postgres
@@ -25,6 +27,8 @@ services:
           - postgres
     volumes:
       - postgres:/var/lib/postgresql/data
+    profiles:
+      - plain_postgres
 
   pagila:
     container_name: pagila
@@ -41,8 +45,35 @@ services:
       default:
         aliases:
           - pagila
+    command: >
+      -c work_mem=4GB
+      -c maintenance_work_mem=4GB
+      -c max_wal_size=4GB
     volumes:
       - pagila:/var/lib/postgresql/data
+    profiles:
+      - pagila
+
+  flights_db:
+    container_name: flight_postgres
+    build:
+      context: ./flight_db
+      dockerfile: Dockerfile
+      args:
+        SCRIPT_PATH: ${FLIGHT_SCRIPT_LOCATION}
+    environment:
+      DB_NAME: ${FLIGHTS_DB_NAME}
+      POSTGRES_USER: ${FLIGHTS_USER}
+      POSTGRES_PASSWORD: ${FLIGHTS_PASSWORD}
+      SQL_SCRIPT_NAME: ${FLIGHT_SCRIPT_NAME}
+    networks:
+      default:
+        aliases:
+          - flights_db
+    volumes:
+      - flights_db:/var/lib/postgresql/data
+    profiles:
+      - flights_db
 
   pgadmin:
     container_name: pgadmin
@@ -52,6 +83,10 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: daplayful@gmail.com
       PGADMIN_DEFAULT_PASSWORD: admin
+    profiles:
+      - plain_postgres
+      - pagila
+      - flights_db
 
   jupyter:
     container_name: jupyter
@@ -66,9 +101,12 @@ services:
       - GRANT_SUDO=yes
     volumes:
       - ./notebooks:/home/jovyan/work
+    profiles:
+      - juniper
 
 volumes:
   postgres:
   cassandra:
   pgadmin:
   pagila:
+  flights_db:
