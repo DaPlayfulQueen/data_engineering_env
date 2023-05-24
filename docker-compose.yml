@@ -41,6 +41,8 @@ services:
       PAGILA_DB_NAME: ${PAGILA_DB_NAME}
       POSTGRES_USER: ${PAGILA_USER}
       POSTGRES_PASSWORD: ${PAGILA_PASSWORD}
+    ports:
+      - "5433:5432"
     networks:
       default:
         aliases:
