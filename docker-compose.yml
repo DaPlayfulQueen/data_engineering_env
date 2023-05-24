@@ -104,7 +104,7 @@ services:
     volumes:
       - ./notebooks:/home/jovyan/work
     profiles:
-      - juniper
+      - jupyter
 
 volumes:
   postgres:
