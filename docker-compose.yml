@@ -86,7 +86,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: daplayful@gmail.com
       PGADMIN_DEFAULT_PASSWORD: admin
     volumes:
-      - pgadmin
+      - pgadmin:/var/lib/pgadmin
     profiles:
       - plain_postgres
       - pagila
