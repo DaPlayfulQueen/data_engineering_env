@@ -1,5 +1,5 @@
 .idea/*
 .idea
-notebooks/*
 .env
 */data/*
+study_outputs/*
