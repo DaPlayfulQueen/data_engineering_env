@@ -1,5 +1,5 @@
 .idea/*
 .idea
-.env
-*/data/*
-artifacts/*
+database_studies/.env
+database_studies/*/data/*
+database_studies/artifacts/*

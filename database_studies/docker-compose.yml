@@ -33,8 +33,8 @@ services:
   pagila:
     container_name: pagila
     build:
-      context: ./pagila
-      dockerfile: Dockerfile
+      context: pagila
+      dockerfile: pagila/Dockerfile
       args:
         PAGILA_DATA: ${PAGILA_DATA}
     environment:
@@ -59,8 +59,8 @@ services:
   flights_db:
     container_name: flight_postgres
     build:
-      context: ./flight_db
-      dockerfile: Dockerfile
+      context: flight_db
+      dockerfile: flight_db/Dockerfile
       args:
         SCRIPT_PATH: ${FLIGHT_SCRIPT_LOCATION}
     environment:
@@ -96,8 +96,8 @@ services:
   jupyter:
     container_name: jupyter
     build:
-      context: ./jupyter
-      dockerfile: Dockerfile
+      context: jupyter
+      dockerfile: jupyter/Dockerfile
     ports:
       - "8888:8888"
     environment:
