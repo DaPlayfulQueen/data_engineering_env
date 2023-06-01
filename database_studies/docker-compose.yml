@@ -87,7 +87,7 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
     volumes:
       - pgadmin:/var/lib/pgadmin
-      - ./artifacts/pgadmin:/var/lib/pgadmin/storage
+      - ./study_artifacts/pgadmin:/var/lib/pgadmin/storage
     profiles:
       - plain_postgres
       - pagila
@@ -105,7 +105,7 @@ services:
       - CHOWN_HOME_OPTS='-R'.
       - GRANT_SUDO=yes
     volumes:
-      - ./artifacts/notebooks:/home/jovyan/work
+      - ./study_artifacts/notebooks:/home/jovyan/work
     profiles:
       - jupyter
 

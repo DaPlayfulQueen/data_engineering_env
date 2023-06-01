@@ -3,3 +3,4 @@
 database_studies/.env
 database_studies/*/data/*
 database_studies/artifacts/*
+airflow_studies/study_artifacts/*

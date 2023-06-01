@@ -1,0 +1,10 @@
+{
+  "source_database": {
+    "conn_type": "postgres",
+    "login": "admin",
+    "password": "admin",
+    "host": "postgres",
+    "port": "5432",
+    "schema": null
+  }
+}
