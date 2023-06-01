@@ -5,6 +5,6 @@
     "password": "admin",
     "host": "postgres",
     "port": "5432",
-    "schema": null
+    "schema": "server"
   }
 }

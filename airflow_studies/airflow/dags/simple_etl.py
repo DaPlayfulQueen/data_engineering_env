@@ -1,9 +1,10 @@
+import logging
 from datetime import timedelta
 from airflow.decorators import dag, task
-from airflow.operators.bash import BashOperator
 from airflow.utils.dates import days_ago
 
-from airflow_studies.airflow.dags.services.psql_session_fabric import get_psql_session
+from services.psql_session_fabric import get_psql_session
+from services.sqlalchemy_models import Orders, OrderTotals
 
 default_args = {
     'owner': 'me',
@@ -11,6 +12,8 @@ default_args = {
     'retries': 1,
     'retry_delay': timedelta(minutes=5)
 }
+
+
 @dag(
     dag_id='example_etl',
     default_args=default_args,
@@ -18,24 +21,50 @@ default_args = {
     schedule_interval=timedelta(days=1)
 )
 def example_etl():
-    extract = BashOperator(
-        task_id='extract',
-        bash_command='echo "transform"'
-    )
-
     @task
     def extract_implement(**kwargs):
+        ti = kwargs['ti']
         with get_psql_session('source_database') as s:
-            pass
+            orders = s.query(Orders).all()
 
-    transform = BashOperator(
-        task_id='transform',
-        bash_command='echo "transform"'
-    )
+        orders = [{
+            'order_id': order.order_id,
+            'item': order.item,
+            'item_price': order.item_price,
+            'amount': order.amount,
+        } for order in orders]
 
-    load = BashOperator(
-        task_id='load',
-        bash_command='echo "load"'
-    )
+        ti.xcom_push(key='orders_data', value=orders)
+
+    @task
+    def transform_implement(**kwargs):
+        ti = kwargs['ti']
+        orders = ti.xcom_pull(key='orders_data')
+
+        orders = [{
+            'order_id': order['order_id'],
+            'total': order['item_price'] * order['amount']
+        } for order in orders]
+
+        logging.info(f'Transformed data {orders}')
+        ti.xcom_push(key='orders_data', value=orders)
+
+    @task
+    def load_implement(**kwargs):
+        ti = kwargs['ti']
+        orders = ti.xcom_pull(key='orders_data')
+
+        orders = [OrderTotals(order_id=order['order_id'], total=order['total']) for order in orders]
+
+        with get_psql_session('source_database') as s:
+            s.add_all(orders)
+            s.commit()
+
+    extract = extract_implement()
+    transform = transform_implement()
+    load = load_implement()
 
     extract >> transform >> load
+
+
+example_etl()
