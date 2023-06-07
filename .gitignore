@@ -2,5 +2,9 @@
 .idea
 database_studies/.env
 database_studies/*/data/*
+**/data/*
 database_studies/artifacts/*
 airflow_studies/study_artifacts/*
+hadoop/hdfs/datanode/*
+hadoop/hdfs/namenode/*
+**/__pycache__/*
